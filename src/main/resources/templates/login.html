@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login - ShelfLife</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="container">
+    <h2>Login</h2>
+    <form th:action="@{/login}" method="post">
+        <label>Email:</label>
+        <input type="email" name="username" placeholder="Enter your email" required/>
+
+        <label>Password:</label>
+        <input type="password" name="password" placeholder="Enter your password" required/>
+
+        <button type="submit">Login</button>
+    </form>
+    <a href="/register">Don't have an account? Register</a>
+</div>
+</body>
+</html>
