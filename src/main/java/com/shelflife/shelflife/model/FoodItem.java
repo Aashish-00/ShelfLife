@@ -1,6 +1,9 @@
 package com.shelflife.shelflife.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,11 +18,23 @@ public class FoodItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    @NotBlank(message = "Food name is required")
     private String name;
+
+    @Column(nullable = false)
+    @NotBlank(message = "Category is required")
     private String category;
-    private Integer quantity;
+
+    @Positive(message = "Quantity must be positive")
+    private Integer quantity = 1;
+
     private LocalDate purchaseDate;
+
+    @Column(nullable = false)
+    @NotNull(message = "Expiry date is required")
     private LocalDate expiryDate;
+
     private String notes;
 
     @ManyToOne

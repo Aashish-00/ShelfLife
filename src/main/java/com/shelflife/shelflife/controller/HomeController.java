@@ -11,4 +11,9 @@ public class HomeController {
     public String home(){
         return "Welcome to shelflife";
     }
+
+    @GetMapping("/")
+    public String index(){
+        return "redirect:/login";
+    }
 }
