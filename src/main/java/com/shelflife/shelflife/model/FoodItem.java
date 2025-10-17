@@ -1,9 +1,7 @@
 package com.shelflife.shelflife.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -33,6 +31,7 @@ public class FoodItem {
 
     @Column(nullable = false)
     @NotNull(message = "Expiry date is required")
+    @Future(message = "Expiry date must be in the future")
     private LocalDate expiryDate;
 
     private String notes;
@@ -40,4 +39,12 @@ public class FoodItem {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+
+    public  boolean isExpiryAfterPurchase(){
+        if (expiryDate == null || purchaseDate == null){
+            return true;
+        }
+        return !expiryDate.isBefore(purchaseDate);
+    }
 }
