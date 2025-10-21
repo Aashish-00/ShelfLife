@@ -4,7 +4,6 @@ import com.shelflife.shelflife.model.FoodItem;
 import com.shelflife.shelflife.model.User;
 import com.shelflife.shelflife.repository.FoodItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;

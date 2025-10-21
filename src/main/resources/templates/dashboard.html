@@ -41,6 +41,55 @@
         </div>
     </div>
 
+    <!-- Analytics Dashboard Section -->
+    <div class="analytics-section" th:if="${analytics != null}">
+        <h3>📊 Food Waste Analytics</h3>
+        <div class="analytics-grid">
+            <div class="analytics-card">
+                <div class="analytics-icon">📦</div>
+                <div class="analytics-content">
+                    <h4>Total Items</h4>
+                    <p class="analytics-number" th:text="${analytics.totalItems}">0</p>
+                </div>
+            </div>
+
+            <div class="analytics-card">
+                <div class="analytics-icon">🚨</div>
+                <div class="analytics-content">
+                    <h4>Expired Items</h4>
+                    <p class="analytics-number" th:text="${analytics.expiredItemsCount}">0</p>
+                </div>
+            </div>
+
+            <div class="analytics-card">
+                <div class="analytics-icon">⚠️</div>
+                <div class="analytics-content">
+                    <h4>Expiring Soon</h4>
+                    <p class="analytics-number" th:text="${analytics.expiringSoonCount}">0</p>
+                </div>
+            </div>
+
+            <div class="analytics-card">
+                <div class="analytics-icon">📈</div>
+                <div class="analytics-content">
+                    <h4>Waste Rate</h4>
+                    <p class="analytics-number" th:text="${analytics.wastePercentage} + '%'">0%</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Breakdown -->
+        <div class="category-section" th:if="${not analytics.itemsByCategory.empty}">
+            <h4>📋 Category Breakdown</h4>
+            <div class="category-list">
+                <div th:each="entry : ${analytics.itemsByCategory}" class="category-item">
+                    <span class="category-name" th:text="${entry.key}">Category</span>
+                    <span class="category-count" th:text="${entry.value}">0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="add-item">
         <h3>➕ Add New Food</h3>
         <form th:action="@{/dashboard/add}" th:object="${newItem}" method="post">

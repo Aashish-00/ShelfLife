@@ -3,7 +3,6 @@ package com.shelflife.shelflife.service;
 import com.shelflife.shelflife.model.FoodItem;
 import com.shelflife.shelflife.model.User;
 import com.shelflife.shelflife.repository.FoodItemRepository;
-import com.shelflife.shelflife.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

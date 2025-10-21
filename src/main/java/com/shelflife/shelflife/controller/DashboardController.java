@@ -2,6 +2,7 @@ package com.shelflife.shelflife.controller;
 
 import com.shelflife.shelflife.model.FoodItem;
 import com.shelflife.shelflife.model.User;
+import com.shelflife.shelflife.service.AnalyticsService;
 import com.shelflife.shelflife.service.ExpiryAlertService;
 import com.shelflife.shelflife.service.FoodItemService;
 import com.shelflife.shelflife.service.UserService;
@@ -15,10 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class DashboardController {
@@ -31,6 +29,9 @@ public class DashboardController {
 
     @Autowired
     private ExpiryAlertService expiryAlertService;
+
+    @Autowired
+    private AnalyticsService analyticsService;
 
     @GetMapping("/dashboard")
     public String showDashboard(Model model, @AuthenticationPrincipal UserDetails currentUser) {
@@ -59,6 +60,9 @@ public class DashboardController {
                     }
                 }
 
+                AnalyticsService.WasteAnalytics analytics = analyticsService.getWasteAnalytics(user, foodItems);
+                Map<String, Object> trends = analyticsService.getMonthlyTrends(user, foodItems);
+
 
                 model.addAttribute("foodItems", foodItems != null ? foodItems : new ArrayList<>());
                 model.addAttribute("newItem", new FoodItem());
@@ -66,6 +70,8 @@ public class DashboardController {
                 model.addAttribute("expiredItems", expiredItems);
                 model.addAttribute("expiryStatus", expiryStatus);
                 model.addAttribute("daysUntilExpiry", daysUntilExpiry);
+                model.addAttribute("analytics", analytics);
+                model.addAttribute("trends", trends);
 
                 return "dashboard";
             }
