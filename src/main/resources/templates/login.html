@@ -1,31 +1,53 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Login - ShelfLife</title>
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/professional.css}">
 </head>
 <body>
-<div class="container">
-    <h2>Login to  shelfLife</h2>
+<div class="auth-container">
+    <div class="auth-card">
+        <h1 class="auth-title">🍎 ShelfLife</h1>
+        <p class="text-center text-secondary mb-4">Sign to your account</p>
+        
+        <div th:if="${param.error}" class="alert-item mb-4">
+            <div class="item-info">
+                <div class="item-name">Invalid Credentials</div>
+                <div class="item-details">Please check your email and password</div>
+            </div>
+        </div>
 
-    <div th:if="${param.error}" class="error">
-        Invalid email or password
+        <div th:if="${param.logout}" class="alert-item warning mb-4">
+            <div class="item-info">
+                <div class="item-name">Logged Out</div>
+                <div class="item-details">You have been logged out successfully</div>
+            </div>
+        </div>
+
+        <form th:action="@{/login}" method="post">
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" name="username" class="form-input" placeholder="Enter your email" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-input" placeholder="Enter your password" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+                🔐 Sign In
+            </button>
+        </form>
+
+        <div class="text-center mt-4">
+            <p class="text-secondary">Don't have an account?</p>
+            <a th:href="@{/register}" class="btn" style="background: transparent; color: var(--accent-primary);">
+                Create Account
+            </a>
+        </div>
     </div>
-
-    <div th:if="${param.logout}" class="success">
-        You have been logout successfully.
-    </div>
-
-    <form th:action="@{/login}" method="post">
-        <label>Email:</label>
-        <input type="email" name="username" placeholder="Enter your email" required/>
-
-        <label>Password:</label>
-        <input type="password" name="password" placeholder="Enter your password" required/>
-
-        <button type="submit">Login</button>
-    </form>
-    <a href="/register">Don't have an account? Register</a>
 </div>
 </body>
 </html>

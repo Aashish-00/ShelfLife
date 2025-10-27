@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Inventory - ShelfLife</title>
+    <link rel="stylesheet" th:href="@{/css/professional.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+
+</head>
+<body>
+
+<!-- Header -->
+<div th:replace="fragments/header :: header"></div>
+
+<div class="dashboard-container">
+    <h2>📋 Your Food Inventory</h2>
+
+    <div th:if="${foodItems.empty}" class="empty-state">
+        <p>No food items yet. Add your first item!</p>
+        <a href="/add-item">Add New Item</a>
+    </div>
+
+    <table th:unless="${foodItems.empty}" class="inventory-table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Quantity</th>
+            <th>Purchase Date</th>
+            <th>Expiry Date</th>
+            <th>Status</th>
+            <th>Notes</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${foodItems}" th:classappend="${expiryStatus.get(item.id)}">
+            <td th:text="${item.name}"></td>
+            <td th:text="${item.category}"></td>
+            <td th:text="${item.quantity}"></td>
+            <td th:text="${item.purchaseDate}"></td>
+            <td th:text="${item.expiryDate}"></td>
+            <td>
+                <span th:if="${expiryStatus.get(item.id)} == 'EXPIRED'" class="status-badge expired">EXPIRED</span>
+                <span th:if="${expiryStatus.get(item.id)} == 'EXPIRES_SOON'" class="status-badge expires-soon">
+                    In <span th:text="${daysUntilExpiry.get(item.id)}"></span> days
+                </span>
+                <span th:if="${expiryStatus.get(item.id)} == 'FRESH'" class="status-badge fresh">FRESH</span>
+            </td>
+            <td th:text="${item.notes}"></td>
+            <td>
+                <form th:action="@{/dashboard/delete/{id}(id=${item.id})}" method="post" style="display:inline;">
+                    <button type="submit" class="delete-btn"
+                            onclick="return confirm('Are you sure you want to delete this item?')">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Footer -->
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

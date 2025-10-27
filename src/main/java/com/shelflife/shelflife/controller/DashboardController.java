@@ -79,6 +79,43 @@ public class DashboardController {
         return "redirect:/login";
     }
 
+    @GetMapping("/inventory")
+    public String showInventory(Model model, @AuthenticationPrincipal UserDetails currentUser){
+        if (currentUser != null){
+            User user = userService.findByEmail(currentUser.getUsername());
+            if (user != null){
+                List<FoodItem> foodItems = foodItemService.getAllItemsByUser(user);
+                Map<Long, String> expiryStatus = new HashMap<>();
+                Map<Long, Integer> daysUntilExpiry = new HashMap<>();
+
+                if (foodItems != null && !foodItems.isEmpty() && expiryAlertService != null){
+                    for (FoodItem item : foodItems){
+                        if (item != null && item.getExpiryDate() != null){
+                            expiryStatus.put(item.getId(), expiryAlertService.getExpiryStatus(item));
+                            daysUntilExpiry.put(item.getId(), expiryAlertService.getDaysUntilExpiry(item));
+                        }
+                    }
+                }
+
+                model.addAttribute("foodItems", foodItems != null ? foodItems : new ArrayList<>());
+                model.addAttribute("expiryStatus", expiryStatus);
+                model.addAttribute("daysUntilExpiry", daysUntilExpiry);
+
+                return "inventory";
+            }
+        }
+        return "redirect:/login";
+    }
+
+    @GetMapping("/add-item")
+    public String showAddItemForm(Model model, @AuthenticationPrincipal UserDetails currentUser){
+        if (currentUser != null){
+            model.addAttribute("newItem", new FoodItem());
+            return "add-item";
+        }
+        return "redirect:/login";
+    }
+
     @PostMapping("/dashboard/add")
     public String addFoodItem(@Valid @ModelAttribute("newItem") FoodItem item,
                               BindingResult result,
@@ -98,18 +135,10 @@ public class DashboardController {
 
 
         if (result.hasErrors()) {
-            System.out.println("=== VALIDATION ERRORS ===");
-            result.getFieldErrors().forEach(error -> {
-                System.out.println("Field: " + error.getField() + " - Error: " + error.getDefaultMessage());
-            });
-
-
             User user = userService.findByEmail(currentUser.getUsername());
             if (user != null) {
                 List<FoodItem> foodItems = foodItemService.getAllItemsByUser(user);
                 model.addAttribute("foodItems", foodItems != null ? foodItems : new ArrayList<>());
-
-
                 Map<Long, String> expiryStatus = new HashMap<>();
                 Map<Long, Integer> daysUntilExpiry = new HashMap<>();
                 List<FoodItem> expiringSoon = new ArrayList<>();
@@ -127,6 +156,7 @@ public class DashboardController {
                     }
                 }
 
+                model.addAttribute("foodItems", foodItems !=null ? foodItems : new ArrayList<>());
                 model.addAttribute("expiringSoon", expiringSoon);
                 model.addAttribute("expiredItems", expiredItems);
                 model.addAttribute("expiryStatus", expiryStatus);
@@ -141,33 +171,28 @@ public class DashboardController {
             User user = userService.findByEmail(currentUser.getUsername());
             if (user != null) {
                 item.setUser(user);
-
-
                 if (item.getPurchaseDate() == null) {
                     item.setPurchaseDate(LocalDate.now());
                 }
 
 
                 foodItemService.addItem(item);
-                System.out.println("Food item added successfully: " + item.getName());
             }
         }
 
-        return "redirect:/dashboard";
+        return "redirect:/inventory";
     }
 
     @PostMapping("/dashboard/delete/{id}")
     public String deleteFoodItem(@PathVariable Long id){
-        System.out.println("Deleting food item with ID: " + id);
-
         try {
             foodItemService.deleteItem(id);
-            System.out.println("Food item deleted successfully: " + id);
         } catch (Exception e) {
-            System.out.println("Error deleting food item: " + e.getMessage());
             e.printStackTrace();
         }
 
         return "redirect:/dashboard";
     }
+
+
 }

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add New Item - ShelfLife</title>
+    <link rel="stylesheet" th:href="@{/css/professional.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+
+<!-- Header -->
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container">
+    <h2>➕ Add New Food Item</h2>
+    <form th:action="@{/dashboard/add}" th:object="${newItem}" method="post">
+        <div class="form-group">
+            <label>Food Name:</label>
+            <input type="text" th:field="*{name}" placeholder="e.g., Milk, Apples" required/>
+        </div>
+        <div class="form-group">
+            <label>Category:</label>
+            <input type="text" th:field="*{category}" placeholder="e.g., Dairy, Fruits" required/>
+        </div>
+        <div class="form-group">
+            <label>Quantity:</label>
+            <input type="number" th:field="*{quantity}" min="1" value="1"/>
+        </div>
+        <div class="form-group">
+            <label>Purchase Date:</label>
+            <input type="date" th:field="*{purchaseDate}"/>
+        </div>
+        <div class="form-group">
+            <label>Expiry Date:</label>
+            <input type="date" th:field="*{expiryDate}" required/>
+        </div>
+        <div class="form-group full-width">
+            <label>Notes (Optional):</label>
+            <input type="text" th:field="*{notes}" placeholder="Organic, Low-fat, Frozen"/>
+        </div>
+
+        <button type="submit" class="add-btn">Add Item</button>
+    </form>
+</div>
+
+<!-- Footer -->
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>
